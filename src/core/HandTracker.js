@@ -7,6 +7,8 @@ class HandTracker {
         this.video.autoplay = true;
         this.video.playsInline = true;
         this.video.setAttribute("playsinline", "");
+        this.video.muted = true;
+        this.video.setAttribute("muted", "");
         this.video.style.display = "none";
         document.body.appendChild(this.video);
 
@@ -33,14 +35,27 @@ class HandTracker {
             this.notifyStatus("Loading Neural Net...");
             const baseUrl = import.meta.env.BASE_URL || '/';
             const vision = await FilesetResolver.forVisionTasks(`${baseUrl}wasm`);
-            this.handLandmarker = await HandLandmarker.createFromOptions(vision, {
-                baseOptions: {
-                    modelAssetPath: `${baseUrl}models/hand_landmarker.task`,
-                    delegate: "GPU"
-                },
-                runningMode: "VIDEO",
-                numHands: 1
-            });
+            
+            try {
+                this.handLandmarker = await HandLandmarker.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: `${baseUrl}models/hand_landmarker.task`,
+                        delegate: "GPU"
+                    },
+                    runningMode: "VIDEO",
+                    numHands: 1
+                });
+            } catch (gpuError) {
+                console.warn("GPU Delegate failed on mobile. Falling back to CPU.", gpuError);
+                this.handLandmarker = await HandLandmarker.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: `${baseUrl}models/hand_landmarker.task`,
+                        delegate: "CPU"
+                    },
+                    runningMode: "VIDEO",
+                    numHands: 1
+                });
+            }
 
             await this.startCamera();
         } catch (err) {
