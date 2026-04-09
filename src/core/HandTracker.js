@@ -1,4 +1,4 @@
-import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import { HandLandmarker, FilesetResolver } from "../../node_modules/@mediapipe/tasks-vision";
 
 class HandTracker {
     constructor() {
@@ -8,15 +8,15 @@ class HandTracker {
         this.video.playsInline = true;
         this.video.style.display = "none";
         document.body.appendChild(this.video);
-        
+
         this.isTracking = false;
         this.lastVideoTime = -1;
         this.currentLandmarks = null;
-        
+
         this.predictLoop = this.predictLoop.bind(this);
         this.statusCallback = null;
     }
-    
+
     onStatusChange(callback) {
         this.statusCallback = callback;
     }
@@ -27,7 +27,7 @@ class HandTracker {
 
     async initialize() {
         if (this.handLandmarker) return;
-        
+
         try {
             this.notifyStatus("Loading Neural Net...");
             const vision = await FilesetResolver.forVisionTasks("/wasm");
@@ -39,7 +39,7 @@ class HandTracker {
                 runningMode: "VIDEO",
                 numHands: 1
             });
-            
+
             await this.startCamera();
         } catch (err) {
             console.error("Initiation Error: ", err);
@@ -50,12 +50,12 @@ class HandTracker {
 
     async startCamera() {
         if (this.video.srcObject) return;
-        
+
         try {
             this.notifyStatus("Requesting Camera Permission...");
             const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
             this.video.srcObject = stream;
-            
+
             return new Promise((resolve) => {
                 this.video.onloadeddata = () => {
                     this.notifyStatus("System Ready");
@@ -83,7 +83,7 @@ class HandTracker {
             return;
         }
         if (this.isTracking) return;
-        
+
         this.isTracking = true;
         this.predictLoop();
     }
@@ -95,10 +95,10 @@ class HandTracker {
 
     predictLoop() {
         if (!this.isTracking) return;
-        
+
         if (this.video.readyState >= 2 && this.video.currentTime !== this.lastVideoTime) {
             this.lastVideoTime = this.video.currentTime;
-            
+
             const results = this.handLandmarker.detectForVideo(this.video, performance.now());
             if (results.landmarks && results.landmarks.length > 0) {
                 this.currentLandmarks = results.landmarks[0];
