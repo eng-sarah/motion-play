@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MotionPlay Hub</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="blob primary"></div>
+    <div class="blob secondary"></div>
+
+    <div id="loading-overlay">
+      <div class="loader-spinner"></div>
+      <p id="loading-text" style="font-weight: 300;">Initializing AI Engine...</p>
+    </div>
+
+    <!-- System Status Bar -->
+    <div id="system-status" class="system-status hidden"></div>
+
+    <!-- Inter-App Back Button -->
+    <div id="nav-back" class="hidden">🔙</div>
+
+    <!-- Camera Toggle Button -->
+    <div id="camera-toggle" class="camera-toggle" title="Toggle Camera">📹</div>
+
+    <div id="app">
+      <!-- Hub View -->
+      <main id="hub-view">
+        <header class="hub-header">
+          <h1>MotionPlay</h1>
+          <p>Hand-Tracking Arcade Games</p>
+        </header>
+
+        <div class="cards-container">
+          <div class="game-card" data-game="balloon">
+            <div class="icon">🎈</div>
+            <h2>Balloon Pop</h2>
+            <p>Pop floating balloons by tapping them with your index finger.</p>
+          </div>
+          
+          <div class="game-card" data-game="rps">
+            <div class="icon">👊🖐️✌️</div>
+            <h2>Neural RPS</h2>
+            <p>Challenge the AI to Rock, Paper, Scissors in a cyberpunk arena.</p>
+          </div>
+          
+          <div class="game-card" data-game="snake">
+            <div class="icon">🐍</div>
+            <h2>Retro Snake</h2>
+            <p>Control the snake with your hand movements in this arcade classic.</p>
+          </div>
+        </div>
+      </main>
+
+      <!-- Active Game View -->
+      <main id="active-game-view" class="hidden">
+        <!-- Game instances injected dynamically here -->
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
