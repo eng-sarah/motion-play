@@ -1,4 +1,4 @@
-import { HandLandmarker, FilesetResolver } from "../../node_modules/@mediapipe/tasks-vision";
+import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
 class HandTracker {
     constructor() {
@@ -6,6 +6,7 @@ class HandTracker {
         this.video = document.createElement("video");
         this.video.autoplay = true;
         this.video.playsInline = true;
+        this.video.setAttribute("playsinline", "");
         this.video.style.display = "none";
         document.body.appendChild(this.video);
 
@@ -54,7 +55,11 @@ class HandTracker {
 
         try {
             this.notifyStatus("Requesting Camera Permission...");
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: "user"
+                } 
+            });
             this.video.srcObject = stream;
 
             return new Promise((resolve) => {
