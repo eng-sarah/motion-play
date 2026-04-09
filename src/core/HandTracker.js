@@ -30,10 +30,11 @@ class HandTracker {
 
         try {
             this.notifyStatus("Loading Neural Net...");
-            const vision = await FilesetResolver.forVisionTasks("/wasm");
+            const baseUrl = import.meta.env.BASE_URL || '/';
+            const vision = await FilesetResolver.forVisionTasks(`${baseUrl}wasm`);
             this.handLandmarker = await HandLandmarker.createFromOptions(vision, {
                 baseOptions: {
-                    modelAssetPath: "/models/hand_landmarker.task",
+                    modelAssetPath: `${baseUrl}models/hand_landmarker.task`,
                     delegate: "GPU"
                 },
                 runningMode: "VIDEO",
